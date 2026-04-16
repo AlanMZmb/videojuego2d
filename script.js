@@ -1,6 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+const music = document.getElementById("bgMusic");
+
 let objects = [];
 let score = 0;
 
@@ -11,16 +13,16 @@ const SIZE = 30;
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
 
-// 🕒 CONTROL DE JUEGO
+// Control del juego
 let timer = 30;
 let gameRunning = false;
 let interval;
 
-// 🏆 MEJOR PUNTUACIÓN
+// Mejor puntuación
 let bestScore = localStorage.getItem("bestScore") || 0;
 document.getElementById("bestScore").innerText = bestScore;
 
-// Crear objeto sin encimarse
+// Crear objeto sin superposición
 function createObject() {
     let obj;
     let valid = false;
@@ -52,7 +54,7 @@ function createObject() {
     return obj;
 }
 
-// Inicializar 25
+// Inicializar objetos
 for (let i = 0; i < 25; i++) {
     objects.push(createObject());
 }
@@ -74,7 +76,7 @@ function update() {
             obj.y += Math.sin(Date.now() / 400) * obj.dy;
         }
 
-        // Rebote corregido
+        // Rebote en bordes
         if (obj.x <= 0) {
             obj.x = 0;
             obj.dx = Math.abs(obj.dx);
@@ -99,7 +101,7 @@ function update() {
     resolveCollisions();
 }
 
-// Colisiones fluidas
+// Colisiones
 function resolveCollisions() {
     for (let i = 0; i < objects.length; i++) {
         for (let j = i + 1; j < objects.length; j++) {
@@ -143,7 +145,6 @@ function draw() {
 
         let glow = 15 + Math.sin(Date.now() / 200 + obj.x) * 12;
 
-        // Halo
         let gradient = ctx.createRadialGradient(
             obj.x + obj.size / 2,
             obj.y + obj.size / 2,
@@ -171,7 +172,7 @@ function draw() {
     });
 }
 
-// Loop
+// Loop principal
 function gameLoop() {
     update();
     draw();
@@ -182,7 +183,7 @@ img.onload = () => {
     gameLoop();
 };
 
-// Click
+// Click en luciérnagas
 canvas.addEventListener("click", function(e) {
 
     if (!gameRunning) return;
@@ -210,10 +211,12 @@ canvas.addEventListener("click", function(e) {
     }
 });
 
-// BOTÓN INICIAR
+// Botón iniciar
 document.getElementById("startBtn").addEventListener("click", () => {
 
     if (gameRunning) return;
+
+    music.play().catch(() => {});
 
     score = 0;
     timer = 30;
@@ -222,7 +225,6 @@ document.getElementById("startBtn").addEventListener("click", () => {
     document.getElementById("score").innerText = score;
     document.getElementById("timer").innerText = timer;
 
-    //  desactivar botón
     document.getElementById("startBtn").disabled = true;
 
     clearInterval(interval);
@@ -237,7 +239,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
     }, 1000);
 });
 
-// FIN DEL JUEGO
+// Finalizar juego
 function endGame() {
     gameRunning = false;
     clearInterval(interval);
@@ -248,7 +250,6 @@ function endGame() {
         document.getElementById("bestScore").innerText = bestScore;
     }
 
-    // reactivar botón
     document.getElementById("startBtn").disabled = false;
 
     alert("Tiempo terminado. Puntuación: " + score);
