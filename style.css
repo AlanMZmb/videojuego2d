@@ -1,0 +1,131 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fondo general */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: url('assets/fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #e0ffe0;
+
+    cursor: url('assets/cursor.png')16 16, auto;
+}
+
+/* Capa oscura para contraste */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: -1;
+}
+
+/* HEADER */
+header {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,255,150,0.2);
+}
+
+header h1 {
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(0,255,150,0.6);
+}
+
+/* MAIN */
+main {
+    margin-top: 20px;
+}
+
+/* INSTRUCCIONES */
+.instructions {
+    max-width: 600px;
+    margin: 15px auto;
+    padding: 12px;
+
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+
+    border: 1px solid rgba(0,255,150,0.2);
+    backdrop-filter: blur(6px);
+
+    font-size: 14px;
+}
+
+/* Lista de instrucciones */
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+    text-align: left;
+}
+
+.instructions li {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 8px;
+}
+
+/* Luciérnaga como ícono */
+.instructions li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+
+    width: 20px;
+    height: 20px;
+
+    background-image: url('assets/luciernaga.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    filter: drop-shadow(0 0 6px rgba(0,255,150,0.8));
+}
+
+/* CONTADOR */
+.score {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00ff99;
+    text-shadow: 0 0 10px rgba(0,255,150,0.7);
+    margin-bottom: 10px;
+}
+
+/* CONTENEDOR DEL JUEGO */
+.game-container {
+    width: 820px;
+    margin: 30px auto;
+    padding: 12px;
+
+    background:
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url('assets/fondoCanvas.jpg');
+
+    background-size: cover;
+    background-position: center;
+
+    border-radius: 15px;
+    border: 1px solid rgba(0,255,150,0.3);
+
+    backdrop-filter: blur(8px);
+
+    box-shadow: 0 0 25px rgba(0,255,150,0.2);
+}
+
+/* CANVAS */
+canvas {
+    background: transparent;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    border-top: 1px solid rgba(0,255,150,0.2);
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Noche de Luciérnagas</title>
+
+    <!-- Favicon (corrigiendo formato) -->
+    <link rel="icon" type="image/png" href="assets/favicon.ico">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="text-center p-3">
+    <h1>Noche de Luciérnagas</h1>
+    <img src="assets/luciernaga.png" width="50">
+</header>
+
+<main class="container text-center">
+
+    <!-- INSTRUCCIONES -->
+    <div class="instructions">
+        <ul>
+            <li>Haz clic en las luciérnagas para atraparlas.</li>
+            <li>Se mueven en distintas direcciones y velocidades.</li>
+            <li>Rebotan entre ellas y nunca desaparecen.</li>
+            <li>Intenta conseguir la mayor puntuación posible.</li>
+        </ul>
+    </div>
+
+    <!-- CONTADOR -->
+    <div class="score">
+        Capturadas: <span id="score">0</span>
+    </div>
+
+    <!-- JUEGO -->
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+    </div>
+
+</main>
+
+<footer class="text-center p-2 mt-3">
+    <p>Equipo: Alan Montes de Oca Hernández - 23200870</p>
+</footer>
+
+<!-- Música -->
+<audio id="bgMusic" src="assets/musica.mp3" autoplay loop></audio>
+
+<script src="script.js"></script>
+
+</body>
+</html>
