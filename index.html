@@ -21,26 +21,54 @@
     <img src="assets/luciernaga.png" width="50">
 </header>
 
-<main class="container text-center">
+<main class="container-fluid">
 
-    <!-- INSTRUCCIONES -->
-    <div class="instructions">
-        <ul>
-            <li>Haz clic en las luciérnagas para atraparlas.</li>
-            <li>Se mueven en distintas direcciones y velocidades.</li>
-            <li>Rebotan entre ellas y nunca desaparecen.</li>
-            <li>Intenta conseguir la mayor puntuación posible.</li>
-        </ul>
-    </div>
+    <div class="layout">
 
-    <!-- CONTADOR -->
-    <div class="score">
-        Capturadas: <span id="score">0</span>
-    </div>
+        <!-- PANEL IZQUIERDO -->
+        <div class="left-panel">
 
-    <!-- JUEGO -->
-    <div class="game-container">
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
+            <!-- BOTÓN -->
+            <button id="startBtn" class="start-btn">Iniciar Juego</button>
+
+            <!-- TEMPORIZADOR -->
+            <div class="timer-box">
+                <h5>Tiempo</h5>
+                <div class="timer-number" id="timer">30</div>
+            </div>
+
+            <!-- PUNTUACIÓN -->
+            <div class="score-box">
+                <h5>Puntuación</h5>
+                <div class="score-number" id="score">0</div>
+            </div>
+
+            <!-- MEJOR PUNTUACIÓN -->
+            <div class="best-box">
+                <h5>Mejor Puntuación</h5>
+                <div class="best-number" id="bestScore">0</div>
+            </div>
+
+            <!-- INSTRUCCIONES -->
+            <div class="instructions-box">
+                <h5>Instrucciones</h5>
+                <ul>
+                    <li>Haz clic en las luciérnagas para atraparlas.</li>
+                    <li>Se mueven en distintas direcciones.</li>
+                    <li>Rebotan entre ellas y en los bordes.</li>
+                    <li>Tienes 30 segundos para conseguir puntos.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- JUEGO -->
+        <div class="game-area">
+            <div class="game-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+        </div>
+
     </div>
 
 </main>
