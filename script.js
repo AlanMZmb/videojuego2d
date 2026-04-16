@@ -7,17 +7,17 @@ let score = 0;
 const img = new Image();
 img.src = "assets/luciernaga.png";
 
-const MIN_SPEED = 0.5;
-const MAX_SPEED = 2.2;
 const SIZE = 30;
+const MIN_SPEED = 0.5;
+const MAX_SPEED = 2.0;
 
-// Crear objeto SIN encimarse
+// Crear objeto sin encimarse
 function createObject() {
-    let newObj;
+    let obj;
     let valid = false;
 
     while (!valid) {
-        newObj = {
+        obj = {
             x: Math.random() * (canvas.width - SIZE),
             y: Math.random() * (canvas.height - SIZE),
             dx: (Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED) * (Math.random() < 0.5 ? -1 : 1),
@@ -28,9 +28,9 @@ function createObject() {
 
         valid = true;
 
-        for (let obj of objects) {
-            let dx = obj.x - newObj.x;
-            let dy = obj.y - newObj.y;
+        for (let o of objects) {
+            let dx = o.x - obj.x;
+            let dy = o.y - obj.y;
             let dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < SIZE) {
@@ -40,10 +40,10 @@ function createObject() {
         }
     }
 
-    return newObj;
+    return obj;
 }
 
-// Inicializar 25 sin encimarse
+// Inicializar 25
 for (let i = 0; i < 25; i++) {
     objects.push(createObject());
 }
@@ -52,6 +52,7 @@ for (let i = 0; i < 25; i++) {
 function update() {
     objects.forEach(obj => {
 
+        // Tipos de movimiento
         if (obj.type === 0) obj.y += obj.dy;
         if (obj.type === 1) obj.x += obj.dx;
 
@@ -65,51 +66,64 @@ function update() {
             obj.y += Math.sin(Date.now() / 400) * obj.dy;
         }
 
-        // Rebote bordes
-        if (obj.x < 0 || obj.x > canvas.width - obj.size) obj.dx *= -1;
-        if (obj.y < 0 || obj.y > canvas.height - obj.size) obj.dy *= -1;
+        // REBOTE CORREGIDO (sin quedarse pegadas)
+        if (obj.x <= 0) {
+            obj.x = 0;
+            obj.dx = Math.abs(obj.dx);
+        }
+
+        if (obj.x >= canvas.width - obj.size) {
+            obj.x = canvas.width - obj.size;
+            obj.dx = -Math.abs(obj.dx);
+        }
+
+        if (obj.y <= 0) {
+            obj.y = 0;
+            obj.dy = Math.abs(obj.dy);
+        }
+
+        if (obj.y >= canvas.height - obj.size) {
+            obj.y = canvas.height - obj.size;
+            obj.dy = -Math.abs(obj.dy);
+        }
     });
 
     resolveCollisions();
 }
 
-// Colisiones REALISTAS (ya no se traban)
+// Colisiones fluidas
 function resolveCollisions() {
     for (let i = 0; i < objects.length; i++) {
         for (let j = i + 1; j < objects.length; j++) {
 
-            let obj1 = objects[i];
-            let obj2 = objects[j];
+            let a = objects[i];
+            let b = objects[j];
 
-            let dx = obj2.x - obj1.x;
-            let dy = obj2.y - obj1.y;
+            let dx = b.x - a.x;
+            let dy = b.y - a.y;
             let dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < SIZE && dist > 0) {
 
-                // Separarlos para evitar que se peguen
                 let overlap = SIZE - dist;
                 let nx = dx / dist;
                 let ny = dy / dist;
 
-                obj1.x -= nx * overlap / 2;
-                obj1.y -= ny * overlap / 2;
-                obj2.x += nx * overlap / 2;
-                obj2.y += ny * overlap / 2;
+                // Separarlas (clave para que no se traben)
+                a.x -= nx * overlap / 2;
+                a.y -= ny * overlap / 2;
+                b.x += nx * overlap / 2;
+                b.y += ny * overlap / 2;
 
-                // Intercambiar velocidades (rebote más natural)
-                let tempDx = obj1.dx;
-                let tempDy = obj1.dy;
+                // Intercambio de velocidades (rebote)
+                let tempDx = a.dx;
+                let tempDy = a.dy;
 
-                obj1.dx = obj2.dx;
-                obj1.dy = obj2.dy;
+                a.dx = b.dx;
+                a.dy = b.dy;
 
-                obj2.dx = tempDx;
-                obj2.dy = tempDy;
-
-                // efecto choque breve
-                ctx.fillStyle = "yellow";
-                ctx.fillRect(obj1.x, obj1.y, 8, 8);
+                b.dx = tempDx;
+                b.dy = tempDy;
             }
         }
     }
@@ -120,7 +134,35 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     objects.forEach(obj => {
+
+        let glow = 15 + Math.sin(Date.now() / 200 + obj.x) * 12;
+
+        // halo externo (luz difusa)
+        ctx.beginPath();
+        let gradient = ctx.createRadialGradient(
+            obj.x + obj.size / 2,
+            obj.y + obj.size / 2,
+            2,
+            obj.x + obj.size / 2,
+            obj.y + obj.size / 2,
+            25
+        );
+
+        gradient.addColorStop(0, "rgba(0,255,150,0.8)");
+        gradient.addColorStop(1, "rgba(0,255,150,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.arc(obj.x + obj.size / 2, obj.y + obj.size / 2, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        //imagen con glow 
+        ctx.save();
+        ctx.shadowColor = "rgba(0,255,150,1)";
+        ctx.shadowBlur = glow;
+
         ctx.drawImage(img, obj.x, obj.y, obj.size, obj.size);
+
+        ctx.restore();
     });
 }
 
@@ -131,12 +173,12 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Esperar carga de imagen
+// Esperar imagen
 img.onload = () => {
     gameLoop();
 };
 
-// Click eliminar + respawn SIN encimarse
+// Click eliminar + respawn
 canvas.addEventListener("click", function(e) {
     let rect = canvas.getBoundingClientRect();
     let mx = e.clientX - rect.left;
